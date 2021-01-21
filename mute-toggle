@@ -1,0 +1,104 @@
+#!/bin/bash
+
+# toggle audio or video in chat applications
+
+# (C) 2021 Dan White
+#
+#
+# Adding a new meeting tool:
+#
+#   Modify the three functions:
+#       detect_chat_app
+#       toggle_audio_keys
+#       toggle_video_keys
+
+set -euo pipefail
+
+toggle_audio=0
+toggle_video=0
+
+if [ "${1-}" = "" ]; then
+    # no arguments?
+    # default to toggle audio/mute state
+    toggle_audio=1
+fi
+
+while [ -n "${1-}" ]; do
+    case "$1" in
+        -a|a) toggle_audio=1 ;;
+        -v|v) toggle_video=1 ;;
+        *) echo "Unrecognized argument: $1" ;;
+    esac
+    shift
+done
+
+
+
+detect_chat_app () {
+    # Return a space-separated string of two fields:
+    # <app-name-tag> <ID from xdotool>
+
+    # Search by window title
+    ZOOM=$(xdotool search --limit 1 --name "Zoom Meeting" || true)
+    MEET=$(xdotool search --limit 1 --name "Meet - " || true)
+
+    if [ -n "$ZOOM" ]; then
+        echo "zoom $ZOOM"
+    elif [ -n "$MEET" ]; then
+        echo "meet $MEET"
+    else
+        echo "none 0"
+    fi
+}
+
+
+toggle_audio_keys () {
+    APP=${1-none}
+
+    case "$APP" in
+        zoom) echo "alt+a" ;;
+        meet) echo "ctrl+d" ;;
+        none|*) echo "" ;;
+    esac
+}
+
+
+toggle_video_keys () {
+    APP=${1-none}
+
+    case "$APP" in
+        zoom) echo "alt+v" ;;
+        meet) echo "ctrl+e" ;;
+        none|*) echo "" ;;
+    esac
+}
+
+
+
+declare -a APP=( $(detect_chat_app) )
+
+
+if [ "${APP[0]}" = "none" ]; then
+    echo "No detected chat app, exiting."
+    exit 1
+fi
+
+echo "toggle audio: $toggle_audio"
+echo "toggle video: $toggle_video"
+
+
+if [ $toggle_audio -eq 1 -o $toggle_video -eq 1 ]; then
+    CURRENT=$(xdotool getwindowfocus)
+
+    xdotool windowactivate --sync ${APP[1]}
+
+    if [ $toggle_audio -eq 1 ]; then
+        xdotool key --clearmodifiers "$(toggle_audio_keys ${APP[0]})"
+    fi
+
+    if [ $toggle_video -eq 1 ]; then
+        xdotool key --clearmodifiers "$(toggle_video_keys ${APP[0]})"
+    fi
+
+    xdotool windowactivate --sync ${CURRENT}
+fi
