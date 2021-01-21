@@ -12,8 +12,11 @@ With no arguments, it defaults to toggling audio only.
 * Zoom via window name "Zoom Meeting"
 * Google Meet via window name prefix "Meet - ".  Note: this only works when the browser tab is active in its window.
 
+
 # Installation
 Make the script executable (`chmod +x mute-toggle`) and either place in a directory in your $PATH or run from its current location (`./mute-toggle`).
+
+I then map this script to a global keyboard shortcut (the `Pause/Break` key) for easy access.
 
 
 ## Requirements
