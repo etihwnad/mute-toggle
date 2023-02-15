@@ -52,7 +52,7 @@ detect_chat_app () {
     # Search by window title
     ZOOM=$(xdotool search --limit 1 --name "Zoom Meeting" || true)
     MEET=$(xdotool search --limit 1 --name "Meet - " || true)
-    GOTOMEETING=$(xdotool search --limit 1 --name "GoToMeeting" || true)
+    GOTOMEETING=$(xdotool search --limit 1 --name "GoTo" || true)
 
 
     if [ -n "$ZOOM" ]; then
