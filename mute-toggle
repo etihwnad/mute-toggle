@@ -17,6 +17,16 @@ set -euo pipefail
 toggle_audio=0
 toggle_video=0
 
+
+help () {
+    echo "$0: toggle microphone or video in chat applications"
+    echo " -a   toggle audio/microphone mute (default)"
+    echo " -v   toggle video/camera mute"
+    exit 1
+}
+
+
+
 if [ "${1-}" = "" ]; then
     # no arguments?
     # default to toggle audio/mute state
@@ -27,6 +37,7 @@ while [ -n "${1-}" ]; do
     case "$1" in
         -a|a) toggle_audio=1 ;;
         -v|v) toggle_video=1 ;;
+        -h|--help) help ;;
         *) echo "Unrecognized argument: $1" ;;
     esac
     shift
