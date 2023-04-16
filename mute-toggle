@@ -51,16 +51,21 @@ detect_chat_app () {
 
     # Search by window title
     ZOOM=$(xdotool search --limit 1 --name "Zoom Meeting" || true)
-    MEET=$(xdotool search --limit 1 --name "Meet - " || true)
     GOTOMEETING=$(xdotool search --limit 1 --name "GoTo" || true)
+    JITSI=$(xdotool search --limit 1 --name "Jitsi Meet" || true)
+    # First look for Jitsi
+    MEET=$(xdotool search --limit 1 --name "Meet - " || true)
 
 
     if [ -n "$ZOOM" ]; then
         echo "zoom $ZOOM"
-    elif [ -n "$MEET" ]; then
-        echo "meet $MEET"
     elif [ -n "$GOTOMEETING" ]; then
         echo "gotomeeting $GOTOMEETING"
+    elif [ -n "$JITSI" ]; then
+        echo "jitsi $JITSI"
+    # Google Meet needs to be low on this list
+    elif [ -n "$MEET" ]; then
+        echo "meet $MEET"
     else
         echo "none 0"
     fi
@@ -72,8 +77,9 @@ toggle_audio_keys () {
 
     case "$APP" in
         zoom) echo "alt+a" ;;
-        meet) echo "ctrl+d" ;;
         gotomeeting) echo "alt+m" ;;
+        jitsi) echo "m" ;;
+        meet) echo "ctrl+d" ;;
         none|*) echo "" ;;
     esac
 }
@@ -84,8 +90,9 @@ toggle_video_keys () {
 
     case "$APP" in
         zoom) echo "alt+v" ;;
-        meet) echo "ctrl+e" ;;
         gotomeeting) echo "alt+v" ;;
+        jitsi) echo "v" ;;
+        meet) echo "ctrl+e" ;;
         none|*) echo "" ;;
     esac
 }
