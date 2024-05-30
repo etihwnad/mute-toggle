@@ -50,7 +50,8 @@ detect_chat_app () {
     # <app-name-tag> <ID from xdotool>
 
     # Search by window title
-    ZOOM=$(xdotool search --limit 1 --name "Zoom Meeting" || true)
+    ZOOM=$(xdotool search --limit 1 --name "Zoom Meeting" \
+           || xdotool search --limit 1 --name "Zoom for Government" || true)
     GOTOMEETING=$(xdotool search --limit 1 --name "GoTo" || true)
     JITSI=$(xdotool search --limit 1 --name "Jitsi Meet" || true)
     # First look for Jitsi
